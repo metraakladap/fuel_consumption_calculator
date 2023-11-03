@@ -1,17 +1,22 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
 
 package com.example.fuelconsumptioncalculator
 
+import android.graphics.drawable.shapes.Shape
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.AlertDialogDefaults.shape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -25,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.example.fuelconsumptioncalculator.ui.theme.FuelConsumptionCalculatorTheme
 
 class MainActivity : ComponentActivity() {
@@ -55,10 +61,13 @@ fun CalculatorScreen() {
 
 
     Column(
-        modifier = Modifier.fillMaxSize(),
+
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
+        verticalArrangement = Arrangement.Center,
+        modifier = Modifier
+            .fillMaxSize(),
+
+        ) {
         distanceValue = CalculatorInputItem("Distance")
         averageFuelConsumptionValue = CalculatorInputItem("Average Fuel Consumption")
         priceValue = CalculatorInputItem("Price")
@@ -68,7 +77,7 @@ fun CalculatorScreen() {
             val distance = distanceValue.toDouble()
             val averageFuelConsumption = averageFuelConsumptionValue.toDouble()
             val price = priceValue.toDouble()
-            (distance / 100 * averageFuelConsumption * price ).toString()
+            (distance / 100 * averageFuelConsumption * price).toString()
 
         } catch (e: Exception) {
             "Please enter all values"
@@ -83,9 +92,9 @@ fun CalculatorScreen() {
 fun CalculatorInputItem(label: String): String {
     var value by remember { mutableStateOf("") }
 
-    TextField(
+    OutlinedTextField(
         value = value,
-        onValueChange = {newValue ->
+        onValueChange = { newValue ->
             value = newValue
         },
         label = { Text(label) },
@@ -94,6 +103,9 @@ fun CalculatorInputItem(label: String): String {
             keyboardType = KeyboardType.Number,
             imeAction = ImeAction.Next
         ),
+        shape = RoundedCornerShape(50.dp),
+        modifier = Modifier
+            .padding(8.dp)
     )
     return value
 }
@@ -104,7 +116,9 @@ fun CalculatorOutputItem(label: String, result: String) {
         value = result,
         onValueChange = {},
         label = { Text(label) },
-        readOnly = true
+        readOnly = true,
+        modifier = Modifier
+            .padding(8.dp)
     )
 }
 
