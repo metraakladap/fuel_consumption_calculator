@@ -96,7 +96,7 @@ fun RowScope.AddItem(
         if (selected) Color.White else Color.Black
 
     val backgroundColor =
-        if (selected) Purple40.copy(alpha = 0.8f) else Color.LightGray.copy(alpha = 0.1f)
+        if (selected) Purple40.copy(alpha = 0.8f) else Color.White.copy(alpha = 0.5f)
     Box(
         modifier = Modifier
             .height(40.dp)
