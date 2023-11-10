@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -61,9 +62,15 @@ fun BottomBar(navController: NavHostController) {
 
     Row(
         modifier = Modifier
-            .padding(8.dp)
-            .background(color = Color.White)
-            .fillMaxWidth()
+            .padding(
+                start = 20.dp,
+                end = 20.dp,
+                top = 10.dp,
+                bottom = 8.dp
+            )
+            .background(color = Color.Transparent)
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceAround,
     )
     {
         screens.forEach { screen ->
@@ -89,7 +96,7 @@ fun RowScope.AddItem(
         if (selected) Color.White else Color.Black
 
     val backgroundColor =
-        if (selected) Purple40.copy(alpha = 0.8f) else Color.Transparent
+        if (selected) Purple40.copy(alpha = 0.8f) else Color.LightGray.copy(alpha = 0.1f)
     Box(
         modifier = Modifier
             .height(40.dp)
@@ -111,7 +118,7 @@ fun RowScope.AddItem(
                     bottom = 8.dp
                 ),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(4.dp)
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             Icon(
                 painter = painterResource(id = if (selected) screen.icon_focused else screen.icon),
@@ -128,3 +135,8 @@ fun RowScope.AddItem(
     }
 }
 
+@Preview
+@Composable
+fun PreviewBottomBar() {
+    BottomBar(navController = rememberNavController())
+}

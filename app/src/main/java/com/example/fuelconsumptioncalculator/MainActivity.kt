@@ -31,6 +31,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.fuelconsumptioncalculator.bottomnav.BottomNav
+import com.example.fuelconsumptioncalculator.screens.HomeScreen
 import com.example.fuelconsumptioncalculator.ui.theme.FuelConsumptionCalculatorTheme
 
 class MainActivity : ComponentActivity() {
@@ -43,89 +45,11 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    CalculatorScreen()
+                    BottomNav()
                 }
             }
         }
     }
 }
 
-@Composable
-fun CalculatorScreen() {
-    var distanceValue by remember { mutableStateOf("") }
-    var averageFuelConsumptionValue by remember { mutableStateOf("") }
-    var priceValue by remember { mutableStateOf("") }
-    var result by remember { mutableStateOf("") }
 
-
-
-
-    Column(
-
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-        modifier = Modifier
-            .fillMaxSize(),
-
-        ) {
-        distanceValue = CalculatorInputItem("Distance")
-        averageFuelConsumptionValue = CalculatorInputItem("Average Fuel Consumption")
-        priceValue = CalculatorInputItem("Price")
-        CalculatorOutputItem("Result", result)
-
-        result = try {
-            val distance = distanceValue.toDouble()
-            val averageFuelConsumption = averageFuelConsumptionValue.toDouble()
-            val price = priceValue.toDouble()
-            (distance / 100 * averageFuelConsumption * price).toString()
-
-        } catch (e: Exception) {
-            "Please enter all values"
-        }
-
-    }
-
-}
-
-
-@Composable
-fun CalculatorInputItem(label: String): String {
-    var value by remember { mutableStateOf("") }
-
-    OutlinedTextField(
-        value = value,
-        onValueChange = { newValue ->
-            value = newValue
-        },
-        label = { Text(label) },
-        singleLine = true,
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Number,
-            imeAction = ImeAction.Next
-        ),
-        shape = RoundedCornerShape(50.dp),
-        modifier = Modifier
-            .padding(8.dp)
-    )
-    return value
-}
-
-@Composable
-fun CalculatorOutputItem(label: String, result: String) {
-    TextField(
-        value = result,
-        onValueChange = {},
-        label = { Text(label) },
-        readOnly = true,
-        modifier = Modifier
-            .padding(8.dp)
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun CalculatorInputItemPreview() {
-    FuelConsumptionCalculatorTheme {
-        CalculatorInputItem("Price")
-    }
-}
