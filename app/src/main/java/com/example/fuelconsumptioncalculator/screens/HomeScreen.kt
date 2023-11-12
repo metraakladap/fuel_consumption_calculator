@@ -27,52 +27,55 @@ import androidx.compose.ui.unit.dp
 fun HomeScreen() {
     CalculatorScreen()
 }
+
 @Composable
 fun CalculatorScreen() {
-    var distanceValue by remember { mutableStateOf("") }
-    var averageFuelConsumptionValue by remember { mutableStateOf("") }
-    var priceValue by remember { mutableStateOf("") }
+    var distanceValue by remember { mutableStateOf(0.0) }
+    var averageFuelConsumptionValue by remember { mutableStateOf(0.0) }
+    var priceValue by remember { mutableStateOf(0.0) }
     var result by remember { mutableStateOf("") }
-
-
-
+    var numberOfPeopleValue by remember { mutableStateOf(0.0) }
 
     Column(
-
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
         modifier = Modifier
             .fillMaxSize(),
-
-        ) {
+    ) {
         distanceValue = CalculatorInputItem("Distance")
         averageFuelConsumptionValue = CalculatorInputItem("Average Fuel Consumption")
         priceValue = CalculatorInputItem("Price")
+        numberOfPeopleValue = CalculatorInputItem("Number of People")
         CalculatorOutputItem("Result", result)
 
-        result = try {
-            val distance = distanceValue.toDouble()
-            val averageFuelConsumption = averageFuelConsumptionValue.toDouble()
-            val price = priceValue.toDouble()
-            (distance / 100 * averageFuelConsumption * price).toString()
+        try {
+            val distance = distanceValue
+            val averageFuelConsumption = averageFuelConsumptionValue
+            val price = priceValue
+            val numberOfPeople = numberOfPeopleValue
+            var temp = (distance / 100 * averageFuelConsumption * price)
+            result = if (numberOfPeople > 0 && distance > 0 && averageFuelConsumption > 0 && price > 0) {
+                temp /= numberOfPeople
+                "$temp"
+            } else {
+                "Please enter a valid values"
+            }
+
 
         } catch (e: Exception) {
-            "Please enter all values"
+            result = "Please enter all values"
         }
-
     }
-
 }
 
-
 @Composable
-fun CalculatorInputItem(label: String): String {
-    var value by remember { mutableStateOf("") }
+fun CalculatorInputItem(label: String): Double {
+    var temp by remember { mutableStateOf("") }
 
     OutlinedTextField(
-        value = value,
+        value = temp,
         onValueChange = { newValue ->
-            value = newValue
+            temp = newValue
         },
         label = { Text(label) },
         singleLine = true,
@@ -84,7 +87,8 @@ fun CalculatorInputItem(label: String): String {
         modifier = Modifier
             .padding(8.dp)
     )
-    return value
+
+    return temp.toDoubleOrNull() ?: 0.0
 }
 
 @Composable
