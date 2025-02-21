@@ -33,6 +33,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.fuelconsumptioncalculator.bottomnav.BottomNav
 import com.example.fuelconsumptioncalculator.screens.HomeScreen
+
 import com.example.fuelconsumptioncalculator.ui.theme.FuelConsumptionCalculatorTheme
 
 class MainActivity : ComponentActivity() {

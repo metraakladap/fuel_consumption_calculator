@@ -4,8 +4,10 @@ package com.example.fuelconsumptioncalculator.bottomnav
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -14,8 +16,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination
@@ -34,18 +41,20 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.fuelconsumptioncalculator.ui.theme.Purple40
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 
+@OptIn(ExperimentalAnimationApi::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun BottomNav() {
-    val navController = rememberNavController()
+    val navController = rememberAnimatedNavController()
 
     Scaffold(
         bottomBar = {
             BottomBar(navController = navController)
         }
     ) {
-        BottomNavGraph(navController = navController)
+        NavGraph(navController = navController)
     }
 }
 
@@ -59,29 +68,35 @@ fun BottomBar(navController: NavHostController) {
 
     val navStackBackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navStackBackEntry?.destination
+    val isLightMode = !isSystemInDarkTheme()
 
-    Row(
+
+    Card(
+        shape = RoundedCornerShape(16.dp),
         modifier = Modifier
-            .padding(
-                start = 20.dp,
-                end = 20.dp,
-                top = 10.dp,
-                bottom = 8.dp
-            )
-            .background(color = Color.Transparent)
+            .padding(24.dp)
             .fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceAround,
-    )
-    {
-        screens.forEach { screen ->
-            AddItem(
-                screen = screen,
-                currentRoute = currentRoute,
-                navController = navController
-            )
+        colors = CardDefaults.cardColors(
+            if (isLightMode) Color.LightGray else Color.DarkGray
+        )
+    ) {
+        Row(
+            modifier = Modifier
+                .background(color = Color.Transparent)
+                .padding(12.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceAround,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            screens.forEach { screen ->
+                AddItem(
+                    screen = screen,
+                    currentRoute = currentRoute,
+                    navController = navController
+                )
+            }
         }
     }
-
 }
 
 @Composable
@@ -92,15 +107,13 @@ fun RowScope.AddItem(
 ) {
     val selected = currentRoute?.hierarchy?.any { it.route == screen.route } == true
 
-    val contentColor =
-        if (selected) Color.White else Color.Black
+    val contentColor = if (selected) Color.White else Color.Gray
+    val backgroundColor = if (selected) MaterialTheme.colorScheme.primary else Color.Transparent
 
-    val backgroundColor =
-        if (selected) Purple40.copy(alpha = 0.8f) else Color.White.copy(alpha = 0.5f)
     Box(
         modifier = Modifier
-            .height(40.dp)
-            .clip(CircleShape)
+            .height(48.dp)
+            .clip(RoundedCornerShape(12.dp))
             .background(color = backgroundColor)
             .clickable(onClick = {
                 navController.navigate(screen.route) {
@@ -108,17 +121,13 @@ fun RowScope.AddItem(
                     launchSingleTop = true
                 }
             })
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        contentAlignment = Alignment.Center
     ) {
         Row(
-            modifier = Modifier
-                .padding(
-                    start = 10.dp,
-                    end = 10.dp,
-                    top = 10.dp,
-                    bottom = 8.dp
-                ),
+            modifier = Modifier.background(color = Color.Transparent),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Icon(
                 painter = painterResource(id = if (selected) screen.icon_focused else screen.icon),
@@ -128,7 +137,8 @@ fun RowScope.AddItem(
             AnimatedVisibility(visible = selected) {
                 Text(
                     text = screen.title,
-                    color = contentColor
+                    color = contentColor,
+                    fontWeight = FontWeight.Medium
                 )
             }
         }
